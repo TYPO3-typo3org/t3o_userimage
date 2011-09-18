@@ -55,6 +55,9 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		
 		//set imgHash
 		$imgHash = $GLOBALS['TSFE']->fe_user->user['tx_t3ouserimage_img_hash'];
+
+		if (!isset($this->conf['imgPath']))
+			$this->conf['imgPath'] = 'uploads/tx_t3ouserimage/';
 		
 		//check imgPath
 		if (@file_exists($this->conf['imgPath']) && @is_array($this->conf['thumbs.']['sizes.'])){

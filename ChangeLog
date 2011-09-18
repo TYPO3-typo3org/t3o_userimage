@@ -1,4 +1,7 @@
-(add new changes on top of this file)
+17-09-2011 Felix Kopp <felix-source@phorax.com>
+
+	* Tagged 0.3.0
+	* Depend on upload-folder
 
 08-02-04 Martin Herr  <mt3x@yeebase.com>
 
