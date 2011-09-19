@@ -67,7 +67,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 			$content = $this->uploadImage($imgHash);		
 		}
 		else {
-			$content = 'ERROR during initialization! Please check imgPath configuration in TS Setup!';
+			$content = 'ERROR during initialization! Please check imgBaseURL configuration in TS Setup!';
 		}
 		
 		return $this->pi_wrapInBaseClass($content);
@@ -116,7 +116,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 				$GLOBALS['TYPO3_DB']->exec_UPDATEquery('fe_users','uid='.$GLOBALS['TSFE']->fe_user->user['uid'],array('tx_t3ouserimage_img_hash' => $imgHash));
 			}
 			else {
-				$this->markerArray['###ERROR_MESSAGE###'] = '<div style="width:400px;padding:15px;margin-bottom:10px;color:white;background-color:#FF4500;font-weight:bold;font-size:11pt;">'.$error.'</div>';
+				$this->markerArray['###ERROR_MESSAGE###'] = '<div class="typo3-message message-error"><div class="message-body">' . $error . '</div></div>';
 			}
 		}
 		
@@ -129,13 +129,13 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		$this->markerArray['###UPLOAD_SIZE###'] = ($this->conf['maxImgSize']/1024/1024);
 		
 		//check if user has already uploaded an image
-		$this->markerArray['###IMG_SRC###'] = $this->conf['imgBaseURL'].'/_dummy-big.jpg';
+		$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/_dummy-big.jpg';
 		$this->markerArray['###DELETE_IMAGES_LINK###'] = '';
 		
 		//image exists -> display delete link
-		if ($imgHash && @file_exists(PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-big.jpg')){
-			$this->markerArray['###IMG_SRC###'] = $this->conf['imgBaseURL'].'/'.$imgHash.'-big.jpg';
-			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink('Restore default image!',
+		if ($imgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $imgHash.'-big.jpg')){
+			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$imgHash.'-big.jpg';
+			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink('Restore default image.',
                                             					$this->pi_getPageLink($GLOBALS['TSFE']->id,'',array(
 															 	$this->prefixId.'[action]' => 'delete',
 															 	$this->prefixId.'[hash]' => $imgHash
@@ -160,10 +160,10 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		if ($deleteHash == $imgHash && $imgHash){
 			//overwrite user hash image with _dummy image (do not delete because there could occure some sso-problems)
 			foreach ($this->conf['thumbs.']['sizes.'] as $key => $imgData){
-				@copy(PATH_site . $this->conf['imgPath'].'/_dummy-'.trim($key).'jpg', PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
+				copy(PATH_site . $this->conf['imgPath'].'/_dummy-'.trim($key).'jpg', PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
 			}
 		}
-		
+		header("Location: " . $this->pi_getPageLink($TSFE->id));
 	}
 	
 	/**
@@ -254,7 +254,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 				$error = 'Please upload an .jpg or .png-image!';
 			break;
 		}
-		return 'ERROR: '.$error;
+		return $error;
 	}
 }
 

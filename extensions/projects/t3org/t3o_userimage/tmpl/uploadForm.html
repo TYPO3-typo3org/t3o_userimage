@@ -1,19 +1,31 @@
-<div style="padding: 10px;">
-	<h3>Your current user image:</h3>
-	<img style="border: 5px solid #ccc;" src="###IMG_SRC###" width="###IMG_WIDTH###" height="###IMG_HEIGHT###" />
-	<p style="padding:10px;">###DELETE_IMAGES_LINK###</p>
-	<h3>Upload a new image:</h3>
-	###ERROR_MESSAGE###
-	<form action="###FORM_URL###" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="###PREFIX###[do]" value="upload">
-	<input type="file" name="###PREFIX###[image]">
-	<input type="submit" value="upload">
-	</form>
-	<p>
-		<strong>Notice:</strong>
-		<ul>
-			<li>Only jpeg and png images smaller than <strong>###UPLOAD_SIZE###MB</strong> are supported!</li>
-			<li>Best upload image size is <strong>140px x 185px!</strong></li>
-		</ul>
-	</p>
+###ERROR_MESSAGE###
+
+<div class="s d" id="section">
+	<div class="g"><!-- g-3 -->
+		<div class="g-3">
+			<div class="gc">
+				<img style="border: 5px solid #ccc;" src="###IMG_SRC###" width="###IMG_WIDTH###" height="###IMG_HEIGHT###" />
+			</div><!-- gc -->
+		</div><!-- g-6 -->
+		<div class="g-6">
+			<div class="gc">
+				<h3>Upload a new image</h3>
+				<form action="###FORM_URL###" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="###PREFIX###[do]" value="upload">
+				<input type="file" name="###PREFIX###[image]">
+				<input type="submit" value="upload">
+				</form>
+				<p>
+				<ul>
+					<li>Please use Jpeg or PNG</li>
+					<li>Max file size is ###UPLOAD_SIZE### MB</li>
+					<li>Best size is 140 x 185px</li>
+				</ul>
+				</p>
+
+				<p><small>###DELETE_IMAGES_LINK###</small></p>
+			</div>
+		</div>
+	</div>
 </div>
+
