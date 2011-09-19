@@ -1,7 +1,7 @@
 plugin.tx_t3ouserimage_pi1{
 	templateFolder = typo3conf/ext/t3o_userimage/tmpl
 	imgBaseURL = fileadmin/userimages
-    imgPath = /var/www/engine/xcp/fileadmin/userimages
+    imgPath = uploads/tx_t3ouserimage
     maxImgSize = 1048576
 	thumbs.sizes.big.width = 140
 	thumbs.sizes.big.height = 185 

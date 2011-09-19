@@ -55,12 +55,9 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		
 		//set imgHash
 		$imgHash = $GLOBALS['TSFE']->fe_user->user['tx_t3ouserimage_img_hash'];
-
-		if (!isset($this->conf['imgPath']))
-			$this->conf['imgPath'] = 'uploads/tx_t3ouserimage/';
 		
 		//check imgPath
-		if (@file_exists($this->conf['imgPath']) && @is_array($this->conf['thumbs.']['sizes.'])){
+		if (@file_exists(PATH_site . $this->conf['imgPath']) && @is_array($this->conf['thumbs.']['sizes.'])){
 			
 			if ($this->piVars['action'] == 'delete'){
 					//delete uploaded image
@@ -136,7 +133,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		$this->markerArray['###DELETE_IMAGES_LINK###'] = '';
 		
 		//image exists -> display delete link
-		if ($imgHash && @file_exists($this->conf['imgPath'].'/'.$imgHash.'-big.jpg')){
+		if ($imgHash && @file_exists(PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-big.jpg')){
 			$this->markerArray['###IMG_SRC###'] = $this->conf['imgBaseURL'].'/'.$imgHash.'-big.jpg';
 			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink('Restore default image!',
                                             					$this->pi_getPageLink($GLOBALS['TSFE']->id,'',array(
@@ -163,7 +160,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		if ($deleteHash == $imgHash && $imgHash){
 			//overwrite user hash image with _dummy image (do not delete because there could occure some sso-problems)
 			foreach ($this->conf['thumbs.']['sizes.'] as $key => $imgData){
-				@copy($this->conf['imgPath'].'/_dummy-'.trim($key).'jpg', $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
+				@copy(PATH_site . $this->conf['imgPath'].'/_dummy-'.trim($key).'jpg', PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
 			}
 		}
 		
@@ -189,7 +186,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
         	//build final dest file
         	$destFile = $imgHash.'-'.str_replace('.','',$key).'.jpg';
         	//t3lib_div::debug($srcFile.'-'.$destFile.'-'.$imgData['width'].'-'.$imgData['height']);
-        	$this->renderThumbnail($imgType, $srcFile, $this->conf['imgPath'].'/'.$destFile, $imgData['width'], $imgData['height']);
+        	$this->renderThumbnail($imgType, $srcFile, PATH_site . $this->conf['imgPath'].'/'.$destFile, $imgData['width'], $imgData['height']);
         }
         
         return $imgHash;
