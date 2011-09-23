@@ -12,18 +12,25 @@
 				<h3>Upload a new image</h3>
 				<form action="###FORM_URL###" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="###PREFIX###[do]" value="upload">
-				<input type="file" name="###PREFIX###[image]">
-				<input type="submit" value="upload">
-				</form>
-				<p>
+
 				<ul>
-					<li>Please use Jpeg or PNG</li>
+					<li>Please use JPG or PNG</li>
 					<li>Max file size is ###UPLOAD_SIZE### MB</li>
 					<li>Best size is 140 x 185px</li>
 				</ul>
-				</p>
+
+				<div class="b-form-row">
+					<input type="file" name="###PREFIX###[image]">
+				</div>
+
+				<div class="b-form-row">
+					<button type="submit" name="submit" value="Upload" class="bu bu-mini">
+						Upload
+					</button>
+				</div>
 
 				<p><small>###DELETE_IMAGES_LINK###</small></p>
+				</form>
 			</div>
 		</div>
 	</div>
