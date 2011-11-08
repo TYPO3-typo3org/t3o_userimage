@@ -135,13 +135,11 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		//image exists -> display delete link
 		if ($imgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $imgHash.'-big.jpg')){
 			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$imgHash.'-big.jpg';
-			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink('Restore default image.',
-                                            					$this->pi_getPageLink($GLOBALS['TSFE']->id,'',array(
-															 	$this->prefixId.'[action]' => 'delete',
-															 	$this->prefixId.'[hash]' => $imgHash
-															 	)
-															 )
-															 );
+			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink(
+				'Restore default image.',
+                $GLOBALS['TSFE']->id,
+				array($this->prefixId.'[action]' => 'delete', $this->prefixId.'[hash]' => $imgHash)
+			);
 		}
 		
 		//render form and return
