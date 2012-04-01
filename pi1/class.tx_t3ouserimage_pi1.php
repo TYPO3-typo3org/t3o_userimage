@@ -133,10 +133,11 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		$this->markerArray['###DELETE_IMAGES_LINK###'] = '';
 		
 		//image exists -> display delete link
+		error_log($imgHash. ' ' . PATH_site . $this->conf['imgPath'] . '/' . $imgHash.'-big.jpg');
 		if ($imgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $imgHash.'-big.jpg')){
 			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$imgHash.'-big.jpg';
 			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink(
-				'Restore default image.',
+				'Restore default image',
                 $GLOBALS['TSFE']->id,
 				array($this->prefixId.'[action]' => 'delete', $this->prefixId.'[hash]' => $imgHash)
 			);
@@ -158,7 +159,7 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		if ($deleteHash == $imgHash && $imgHash){
 			//overwrite user hash image with _dummy image (do not delete because there could occure some sso-problems)
 			foreach ($this->conf['thumbs.']['sizes.'] as $key => $imgData){
-				copy(PATH_site . $this->conf['imgPath'].'/_dummy-'.trim($key).'jpg', PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
+				@unlink(PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
 			}
 		}
 		header("Location: " . $this->pi_getPageLink($TSFE->id));
