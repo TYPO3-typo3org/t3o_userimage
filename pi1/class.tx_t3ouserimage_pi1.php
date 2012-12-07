@@ -110,10 +110,10 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 			
 			//check if image exists and is in right format
 			if ($error == ''){
-				$imgHash = $this->buildThumbnails($imgType, $tmpName, $imgHash);
+				$newImgHash = $this->buildThumbnails($imgType, $tmpName, '', $imgHash);
 				
 				//update imgHash into user table
-				$GLOBALS['TYPO3_DB']->exec_UPDATEquery('fe_users','uid='.$GLOBALS['TSFE']->fe_user->user['uid'],array('tx_t3ouserimage_img_hash' => $imgHash));
+				$GLOBALS['TYPO3_DB']->exec_UPDATEquery('fe_users','uid='.$GLOBALS['TSFE']->fe_user->user['uid'],array('tx_t3ouserimage_img_hash' => $newImgHash));
 			}
 			else {
 				$this->markerArray['###ERROR_MESSAGE###'] = '<div class="typo3-message message-error"><div class="message-body">' . $error . '</div></div>';
@@ -133,12 +133,12 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		$this->markerArray['###DELETE_IMAGES_LINK###'] = '';
 		
 		//image exists -> display delete link
-		if ($imgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $imgHash.'-big.jpg')){
-			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$imgHash.'-big.jpg';
+		if ($newImgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $newImgHash.'-big.jpg')){
+			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$newImgHash.'-big.jpg';
 			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink(
 				'Restore default image',
                 $GLOBALS['TSFE']->id,
-				array($this->prefixId.'[action]' => 'delete', $this->prefixId.'[hash]' => $imgHash)
+				array($this->prefixId.'[action]' => 'delete', $this->prefixId.'[hash]' => $newImgHash)
 			);
 		}
 		
@@ -161,7 +161,12 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 				@unlink(PATH_site . $this->conf['imgPath'].'/'.$imgHash.'-'.$key.'jpg');
 			}
 		}
-		header("Location: " . $this->pi_getPageLink($TSFE->id));
+
+			// Build the redirect url
+		$link = $this->pi_getPageLink( $GLOBALS['TSFE']->id );
+		$redirectUrl = t3lib_div::locationHeaderUrl( $link );
+		$GLOBALS['TSFE']->jumpurl = $redirectUrl;
+
 	}
 	
 	/**
@@ -169,9 +174,11 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 	 * 
 	 * @param	string		$imgType: image source type (jpg/png)
 	 * @param	string		$srcFile: tmp source file
-	 * @return void
+	 * @param	string		$imgHash: The image hash. if empty, a new one is generated
+	 * @param	string		$previousImgHash: The previous image hash to remove old images
+	 * @return  string		The image hash
 	 */
-	function buildThumbnails($imgType, $srcFile, $imgHash = ''){
+	function buildThumbnails($imgType, $srcFile, $imgHash = '', $previousImgHash = ''){
 		
 		//build img hash
 		if (!$imgHash){
@@ -183,9 +190,14 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
         foreach ($this->conf['thumbs.']['sizes.'] as $key => $imgData){
         	//build final dest file
         	$destFile = $imgHash.'-'.str_replace('.','',$key).'.jpg';
-        	//t3lib_div::debug($srcFile.'-'.$destFile.'-'.$imgData['width'].'-'.$imgData['height']);
         	$this->renderThumbnail($imgType, $srcFile, PATH_site . $this->conf['imgPath'].'/'.$destFile, $imgData['width'], $imgData['height']);
         }
+
+		if ( $previousImgHash != '' ) {
+			foreach ( $this->conf['thumbs.']['sizes.'] AS $key => $imgData ) {
+				@unlink( PATH_site . $this->conf['imgPath'] . '/' . $previousImgHash . '-' . $key . 'jpg' );
+			}
+		}
         
         return $imgHash;
 	}
