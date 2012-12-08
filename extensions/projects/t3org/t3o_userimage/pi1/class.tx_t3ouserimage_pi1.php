@@ -119,7 +119,12 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 				$this->markerArray['###ERROR_MESSAGE###'] = '<div class="typo3-message message-error"><div class="message-body">' . $error . '</div></div>';
 			}
 		}
-		
+
+			// If a new image has been uploaded, change the hash to the new image hash
+		if ( $newImgHash != '' ) {
+			$imgHash = $newImgHash;
+		}
+
 		//set some global markers
 		$this->markerArray['###PREFIX###'] = $this->prefixId;
 		$this->markerArray['###FORM_URL###'] = $this->pi_getPageLink($GLOBALS['TSFE']->id);
@@ -131,14 +136,14 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		//check if user has already uploaded an image
 		$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/_dummy-big.jpg';
 		$this->markerArray['###DELETE_IMAGES_LINK###'] = '';
-		
+
 		//image exists -> display delete link
-		if ($newImgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $newImgHash.'-big.jpg')){
-			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$newImgHash.'-big.jpg';
+		if ( $imgHash && @file_exists(PATH_site . $this->conf['imgPath'] . '/' . $imgHash.'-big.jpg') ){
+			$this->markerArray['###IMG_SRC###'] = $this->conf['imgPath'].'/'.$imgHash.'-big.jpg';
 			$this->markerArray['###DELETE_IMAGES_LINK###'] = $this->cObj->getTypoLink(
 				'Restore default image',
                 $GLOBALS['TSFE']->id,
-				array($this->prefixId.'[action]' => 'delete', $this->prefixId.'[hash]' => $newImgHash)
+				array($this->prefixId.'[action]' => 'delete', $this->prefixId.'[hash]' => $imgHash)
 			);
 		}
 		

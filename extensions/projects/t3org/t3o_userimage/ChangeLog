@@ -1,7 +1,24 @@
+2012-12-08 Andreas Beutel <andreas.beutel@mehrwert.de>
+
+	[BUGFIX] 0.3.2
+
+	* fix regression from 0.3.1: New uploaded image was not displayed on profile page due to wrong hash used
+
+
+2012-12-07 Andreas Beutel <andreas.beutel@mehrwert.de>
+
+	[BUGFIX] 0.3.1
+
+    * add option for prvious hash on buildThumbnails() to remove old thumbnails after successfull creation of new thumbnails
+    * fix #38775 - use new hash for thumbnails image creation
+    * fix redirect bug in deleteImag() - usee $GLOBALS['TSFE']->id and t3lib_div::locationHeaderUrl
+
+
 17-09-2011 Felix Kopp <felix-source@phorax.com>
 
 	* Tagged 0.3.0
 	* Depend on upload-folder
+
 
 08-02-04 Martin Herr  <mt3x@yeebase.com>
 
