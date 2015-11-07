@@ -168,7 +168,10 @@ class tx_t3ouserimage_pi1 extends tslib_pibase {
 		}
 
 			// Build the redirect url
-		header('Location: '.$this->pi_getPageLink( $GLOBALS['TSFE']->id ));
+		$link = $this->pi_getPageLink( $GLOBALS['TSFE']->id );
+		$redirectUrl = t3lib_div::locationHeaderUrl( $link );
+		t3lib_div::_GETset( (string) t3lib_div::hmac($redirectUrl, 'jumpurl'), 'juHash' );
+		$GLOBALS['TSFE']->jumpurl = $redirectUrl;
 
 	}
 	
